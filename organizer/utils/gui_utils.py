@@ -1,0 +1,67 @@
+import tkinter as tk
+import json
+
+organizer_instance = {"obj": None}
+
+
+def set_folder(txt_box, FileOrganizer, rules, history):
+    folder = txt_box.get("1.0", tk.END).strip()
+    if folder:
+        try:
+            organizer_instance["obj"] = FileOrganizer(folder, rules, history)  # type: ignore
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, f"Folder set: {folder}")
+        except Exception as e:
+            organizer_instance["obj"] = None
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, f"Please Enter Valid Path: {e}")
+    else:
+        txt_box.delete(1.0, "end")
+        txt_box.insert(tk.END, "Please Enter Valid Path")
+
+
+def organize_action(txt_box):
+    org = organizer_instance["obj"]
+    if org:
+        try:
+            org.organize()
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, "Organized successfully.")
+        except Exception as e:
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, f"Error organizing folder: {e}")
+    else:
+        txt_box.delete(1.0, "end")
+        txt_box.insert(tk.END, "Set folder first.")
+
+
+def undo_action(txt_box):
+    org = organizer_instance["obj"]
+    if org:
+        try:
+            with open("undo.json", "r") as w:
+                org.history = json.load(w)
+            org.undo()
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, "Undo successful.")
+        except Exception as e:
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, f"Error undoing. {e}")
+    else:
+        txt_box.delete(1.0, "end")
+        txt_box.insert(tk.END, "Set folder first.")
+
+
+def reset_action(txt_box):
+    org = organizer_instance["obj"]
+    if org:
+        try:
+            org.reset()
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, "Reset successful.")
+        except Exception as e:
+            txt_box.delete(1.0, "end")
+            txt_box.insert(tk.END, f"Error resetting: {e}")
+    else:
+        txt_box.delete(1.0, "end")
+        txt_box.insert(tk.END, "Set folder first.")
