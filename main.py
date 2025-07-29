@@ -4,32 +4,57 @@ from organizer.utils.data import history
 import json
 from pathlib import Path
 from organizer.app import run
+import sys
 
 args = parse_args()
 
 
 def main():
     source = args.source or str(Path.home() / "Downloads")
-    rules = args.rules
+    rules_path = args.rules
     data = history
     simulate = args.simulate
     reset = args.reset
 
-    with open(rules) as f:
-        rules = json.load(f)
+    # Error proofing for rules file
+    try:
+        with open(rules_path) as f:
+            rules = json.load(f)
+            if not isinstance(rules, dict):
+                print(f"Rules file '{rules_path}' is not a valid JSON object.")
+                sys.exit(1)
+    except FileNotFoundError:
+        print(f"Rules file '{rules_path}' not found.")
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from rules file '{rules_path}': {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error reading rules file '{rules_path}': {e}")
+        sys.exit(1)
 
-    organizer = FileOrganizer(source, rules, data, simulate)
+    try:
+        organizer = FileOrganizer(source, rules, data, simulate)
+    except Exception as e:
+        print(f"Error initializing FileOrganizer: {e}")
+        sys.exit(1)
 
-    if args.undo:
-        organizer.undo()
-    if reset:
-        organizer.reset()
-
-    organizer.organize()
+    try:
+        if args.undo:
+            organizer.undo()
+        if reset:
+            organizer.reset()
+        organizer.organize()
+    except Exception as e:
+        print(f"Error during organization: {e}")
 
 
 if __name__ == "__main__":
-    if args.gui:
-        run()
-    else:
-        main()
+    try:
+        if args.gui:
+            run()
+        else:
+            main()
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        sys.exit(1)
