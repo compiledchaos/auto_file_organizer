@@ -11,7 +11,7 @@ from organizer.utils import (
 )
 
 
-def run():
+def run_gui():
     root = tk.Tk()
     frame = ttk.Frame(root)
     frame.grid(column=0, row=0, sticky=("W, N ,E, S"))

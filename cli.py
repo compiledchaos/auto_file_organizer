@@ -48,4 +48,10 @@ def parse_args():
         help="Swich to GUI",
     )
 
+    parser.add_argument(
+        "--watchdog",
+        action="store_true",
+        help="Activates WatchDog",
+    )
+
     return parser.parse_args()

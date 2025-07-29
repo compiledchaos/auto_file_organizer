@@ -1,5 +1,6 @@
 from pathlib import Path
 from organizer.utils import record_move, update, reset
+import time
 
 
 class FileOrganizer:
@@ -7,39 +8,40 @@ class FileOrganizer:
     def __init__(self, source_folder, rules, history, simulate=False, logger=None):
         self.source = Path(source_folder)
         self.rules = rules
-        try:
-            self.files = [x for x in self.source.iterdir() if x.is_file()]
-        except Exception as e:
-            self.files = []
-            if logger:
-                logger(f"Error reading source folder: {e}")
-            else:
-                print(f"Error reading source folder: {e}")
+
         self.history = history
         self.simulate = simulate
         self.log = logger or print
 
     def organize(self):
+        files = [x for x in self.source.iterdir() if x.is_file()]
         if not self.simulate:
             for dir in self.rules.values():
                 try:
                     Path(self.source / dir).mkdir(parents=True, exist_ok=True)
                 except Exception as e:
                     self.log(f"Error creating directory '{dir}': {e}")
-        for x in self.files:
+        for x in files:
             for a, b in self.rules.items():
                 if Path(x).suffix == a:
                     dest = Path(self.source) / b / Path(x).name
-                    try:
-                        if not self.simulate:
-                            Path(x).rename(dest)
-                        record_move(x, dest, self.simulate)
-                    except FileNotFoundError:
-                        self.log(f"File not found: {x}")
-                    except PermissionError:
-                        self.log(f"Permission denied: {x}")
-                    except Exception as e:
-                        self.log(f"Error moving '{x}' to '{dest}': {e}")
+                    for attempt in range(5):  # Try up to 5 times
+                        try:
+                            if not self.simulate:
+                                Path(x).rename(dest)
+                            record_move(x, dest, self.simulate)
+                            break  # Success, exit retry loop
+                        except PermissionError:
+                            if attempt < 4:
+                                time.sleep(0.5)  # Wait half a second before retrying
+                            else:
+                                self.log(f"Permission denied after retries: {x}")
+                        except FileNotFoundError:
+                            self.log(f"File not found: {x}")
+                            break
+                        except Exception as e:
+                            self.log(f"Error moving '{x}' to '{dest}': {e}")
+                            break
 
     def undo(self):
         if not self.history:
