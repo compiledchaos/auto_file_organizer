@@ -78,26 +78,33 @@ This will read from `undo.json` and move all files back to their original locati
 
 ```text
 auto_file_organizer/
-├── organizer/
-│   ├── core.py          # FileOrganizer class and logic
-│   ├── rules.py         # Rule loading and validation
-│   ├── logger.py        # Logging utility (in progress)
-│   └── __init__.py
-├── cli.py               # Argument parser
-├── main.py              # Script entry point
-├── rules.json           # Default file rules
-├── undo.json            # Last move history (for undo)
-├── README.md
-├── requirements.txt
-└── setup.py             # Packaging (coming soon)
+├── organizer/                  # Main package containing core logic and utilities
+│   ├── __init__.py             # Marks the directory as a Python package
+│   ├── app.py                  # (Optional) Entry point for GUI
+│   ├── core.py                 # Core organizing and undo logic
+│   └── utils/                  # Utility modules for supporting functions
+│       ├── __init__.py         # Marks the utils directory as a package
+│       ├── data.py             # Data handling and serialization helpers
+│       ├── gui_utils.py        # Utilities for GUI components
+│       └── record.py           # Functions for recording file moves and undo info
+├── cli.py                      # Command-line interface entry point
+├── commands.py                 # CLI command definitions and argument parsing
+├── file_watcher.py             # Optional: Watches folders for changes to auto-organize
+├── LICENSE                     # Project license (MIT)
+├── main.py                     # Main script to launch the organizer
+├── README.md                   # Project documentation
+├── requirements.txt            # Python dependencies
+├── rules.json                  # Default rules for organizing files
+├── setup.py                    # Packaging and installation script
+├── undo.json                   # Stores last batch of file moves for undo
+├── .gitignore                  # Git ignore rules
+└── .vscode/                    # VS Code editor settings (optional)
+    └── settings.json           # Workspace settings
 ```
 
 ---
 
 ## 🧭 Roadmap / Coming Soon
-
-* ⏱️ **Real-Time Watcher**
-  Auto-organize files as they appear in the target folder using the `watchdog` module.
 
 * 📦 **Python Package**
   Installable via pip with entry points like `auto-organize` for CLI use.
@@ -123,4 +130,5 @@ This project is licensed under the MIT License.
 ## 👤 Author
 
 Built by [compiledchaos](https://github.com/compiledchaos) (Sachin Karthikeyan).
+````
 
