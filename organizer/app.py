@@ -39,6 +39,3 @@ def run():
     Reset.grid(column=1, row=3)
 
     frame.mainloop()
-
-
-run()

@@ -3,21 +3,26 @@ from organizer.utils import record_move, update, reset
 
 
 class FileOrganizer:
-    def __init__(self, source_folder, rules, history):
+
+    def __init__(self, source_folder, rules, history, simulate=False, logger=None):
         self.source = Path(source_folder)
         self.rules = rules
         self.files = [x for x in self.source.iterdir() if x.is_file()]
         self.history = history
+        self.simulate = simulate
+        self.log = logger or print
 
     def organize(self):
-        for dir in self.rules.values():
-            Path(self.source / dir).mkdir(parents=True, exist_ok=True)
+        if not self.simulate:
+            for dir in self.rules.values():
+                Path(self.source / dir).mkdir(parents=True, exist_ok=True)
         for x in self.files:
             for a, b in self.rules.items():
                 if Path(x).suffix == a:
                     dest = Path(self.source) / b / Path(x).name
-                    Path(x).rename(dest)
-                    record_move(x, dest)
+                    if not self.simulate:
+                        Path(x).rename(dest)
+                    record_move(x, dest, self.simulate)
 
     def undo(self):
         self.last_move = self.history.pop()

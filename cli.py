@@ -36,4 +36,16 @@ def parse_args():
         "--logfile", type=str, help="Path to log file (enables file logging)."
     )
 
+    parser.add_argument(
+        "--reset",
+        action="store_true",
+        help="Reset history before organizing new folder",
+    )
+
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="Swich to GUI",
+    )
+
     return parser.parse_args()

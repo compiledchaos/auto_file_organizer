@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 
 
-def record_move(original_path, new_path, undo_file="undo.json"):
+def record_move(original_path, new_path, simulate=False, undo_file="undo.json"):
     move = {
         "original_path": str(original_path),
         "new_path": str(new_path),
@@ -17,9 +17,11 @@ def record_move(original_path, new_path, undo_file="undo.json"):
         data = []
 
     data.append(move)
-
-    with open(undo_file, "w") as f:
-        json.dump(data, f, indent=2)
+    if not simulate:
+        with open(undo_file, "w") as f:
+            json.dump(data, f, indent=2)
+    else:
+        print(data)
 
 
 def update(data, undo_file="undo.json"):
