@@ -56,7 +56,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### With Arguments (Coming Soon)
+### With Arguments
 
 ```bash
 python cli.py --simulate --rules myrules.json --logfile logs/output.log
@@ -83,7 +83,7 @@ auto_file_organizer/
 │   ├── rules.py         # Rule loading and validation
 │   ├── logger.py        # Logging utility (in progress)
 │   └── __init__.py
-├── cli.py               # Argument parser (coming soon)
+├── cli.py               # Argument parser
 ├── main.py              # Script entry point
 ├── rules.json           # Default file rules
 ├── undo.json            # Last move history (for undo)
@@ -101,9 +101,6 @@ auto_file_organizer/
 
 * 📦 **Python Package**
   Installable via pip with entry points like `auto-organize` for CLI use.
-
-* 🖥️ **Command Line Interface (CLI)**
-  Advanced flags like `--simulate`, `--undo`, `--rules`, and `--logfile`.
 
 * 📓 **Logging Support**
   Enable debug, info, and error logs to console and file, configurable per run.
