@@ -14,6 +14,7 @@ A Python utility to automatically organize your files based on type, date, or cu
 - 🧠 Supports rule files (`.json`) for custom behaviors
 - 🔙 Undo functionality (recover your last batch of moves)
 - 🛠 Easily extendable with new rules, filters, or backends
+- 🧠 Auto organizers files on drop
 
 ---
 
