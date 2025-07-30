@@ -5,7 +5,7 @@ from watchdog.events import DirCreatedEvent, FileCreatedEvent, FileSystemEventHa
 from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
-from commands import args
+from args import args
 from organizer.logger_code import get_logger
 
 

@@ -1,25 +1,23 @@
+import json
+import sys
+from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
-import json
-from pathlib import Path
-import sys
 from organizer.logger_code import get_logger
-from args import args
-
-if args.logfile:
-    log = get_logger(log_to_file=True, log_file=args.logfile)
-else:
-    log = get_logger()
+from args import parse_args  # <- not args!
 
 
 def cli():
+    args = parse_args()  # <- moved inside the function
+
+    log = get_logger(log_to_file=bool(args.logfile), log_file=args.logfile)
+
     source = args.source or str(Path.home() / "Downloads")
     rules_path = args.rules
     data = history
     simulate = args.simulate
     reset = args.reset
 
-    # Error proofing for rules file
     try:
         with open(rules_path) as f:
             rules = json.load(f)
@@ -38,11 +36,6 @@ def cli():
 
     try:
         organizer = FileOrganizer(source, rules, data, simulate, logger=log)
-    except Exception as e:
-        log.critical(f"Error initializing FileOrganizer: {e}")
-        sys.exit(1)
-
-    try:
         if args.undo:
             organizer.undo()
         if reset:
@@ -50,3 +43,4 @@ def cli():
         organizer.organize()
     except Exception as e:
         log.error(f"Error during organization: {e}")
+        sys.exit(1)
