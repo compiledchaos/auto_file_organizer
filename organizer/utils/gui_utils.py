@@ -1,6 +1,6 @@
 import tkinter as tk
 import json
-from args import args
+from organizer.args import args
 from organizer.logger_code import get_logger
 
 organizer_instance = {"obj": None}

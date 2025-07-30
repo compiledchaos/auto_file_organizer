@@ -5,6 +5,9 @@ from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from organizer.logger_code import get_logger
 from organizer.args import parse_args  # <- not args!
+from organizer.utils.data import rules
+
+x = rules
 
 
 def cli():
@@ -13,7 +16,7 @@ def cli():
     log = get_logger(log_to_file=bool(args.logfile), log_file=args.logfile)
 
     source = args.source or str(Path.home() / "Downloads")
-    rules_path = args.rules
+    rules_path = args.rules or x
     data = history
     simulate = args.simulate
     reset = args.reset
