@@ -29,7 +29,7 @@ class FileOrganizer:
                         try:
                             if not self.simulate:
                                 Path(x).rename(dest)
-                            record_move(x, dest, self.simulate)
+                            record_move(x, dest, self.simulate, logfile=self.log)
                             break  # Success, exit retry loop
                         except PermissionError:
                             if attempt < 4:
@@ -57,12 +57,12 @@ class FileOrganizer:
                 # Backup the existing file before replacing
                 orig.rename(backup)
             new.rename(orig)
-            update(self.history)
+            update(self.history, logfile=self.log)
         except Exception as e:
             self.log(f"Error during undo: {e}")
 
     def reset(self):
         try:
-            reset()
+            reset(logfile=self.log)
         except Exception as e:
             self.log(f"Error during reset: {e}")

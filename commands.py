@@ -4,8 +4,14 @@ from organizer.utils.data import history
 import json
 from pathlib import Path
 import sys
+from organizer.logger_code import get_logger
 
 args = parse_args()
+
+if args.logfile:
+    log = get_logger(log_to_file=True, log_file=args.logfile)
+else:
+    log = get_logger()
 
 
 def cli():
@@ -20,22 +26,22 @@ def cli():
         with open(rules_path) as f:
             rules = json.load(f)
             if not isinstance(rules, dict):
-                print(f"Rules file '{rules_path}' is not a valid JSON object.")
+                log.error(f"Rules file '{rules_path}' is not a valid JSON object.")
                 sys.exit(1)
     except FileNotFoundError:
-        print(f"Rules file '{rules_path}' not found.")
+        log.warning(f"Rules file '{rules_path}' not found.")
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"Error decoding JSON from rules file '{rules_path}': {e}")
+        log.error(f"Error decoding JSON from rules file '{rules_path}': {e}")
         sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error reading rules file '{rules_path}': {e}")
+        log.error(f"Unexpected error reading rules file '{rules_path}': {e}")
         sys.exit(1)
 
     try:
-        organizer = FileOrganizer(source, rules, data, simulate)
+        organizer = FileOrganizer(source, rules, data, simulate, logger=log)
     except Exception as e:
-        print(f"Error initializing FileOrganizer: {e}")
+        log.critical(f"Error initializing FileOrganizer: {e}")
         sys.exit(1)
 
     try:
@@ -45,4 +51,4 @@ def cli():
             organizer.reset()
         organizer.organize()
     except Exception as e:
-        print(f"Error during organization: {e}")
+        log.error(f"Error during organization: {e}")

@@ -1,9 +1,17 @@
 from datetime import datetime
 import json
 import os
+from logger_code import get_logger
 
 
-def record_move(original_path, new_path, simulate=False, undo_file="undo.json"):
+def record_move(
+    original_path, new_path, simulate=False, undo_file="undo.json", logfile=None
+):
+
+    if logfile:
+        log = get_logger(log_to_file=True, log_file=logfile)
+    else:
+        log = get_logger()
     move = {
         "original_path": str(original_path),
         "new_path": str(new_path),
@@ -21,7 +29,7 @@ def record_move(original_path, new_path, simulate=False, undo_file="undo.json"):
         else:
             data = []
     except Exception as e:
-        print(f"Error reading undo file '{undo_file}': {e}")
+        log.error(f"Error reading undo file '{undo_file}': {e}")
         data = []
 
     data.append(move)
@@ -30,22 +38,30 @@ def record_move(original_path, new_path, simulate=False, undo_file="undo.json"):
             with open(undo_file, "w") as f:
                 json.dump(data, f, indent=2)
         except Exception as e:
-            print(f"Error writing to undo file '{undo_file}': {e}")
+            log.error(f"Error writing to undo file '{undo_file}': {e}")
     else:
-        print(data)
+        log.info(data)
 
 
-def update(data, undo_file="undo.json"):
+def update(data, undo_file="undo.json", logfile=None):
+    if logfile:
+        log = get_logger(log_to_file=True, log_file=logfile)
+    else:
+        log = get_logger()
     try:
         with open(undo_file, "w") as f:
             json.dump(data, f, indent=2)
     except Exception as e:
-        print(f"Error updating undo file '{undo_file}': {e}")
+        log.error(f"Error updating undo file '{undo_file}': {e}")
 
 
-def reset(undo_file="undo.json"):
+def reset(undo_file="undo.json", logfile=None):
+    if logfile:
+        log = get_logger(log_to_file=True, log_file=logfile)
+    else:
+        log = get_logger()
     try:
         with open(undo_file, "w") as f:
             json.dump([], f, indent=2)
     except Exception as e:
-        print(f"Error resetting undo file '{undo_file}': {e}")
+        log.error(f"Error resetting undo file '{undo_file}': {e}")

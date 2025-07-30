@@ -6,6 +6,7 @@ from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from commands import args
+from organizer.logger_code import get_logger
 
 
 class MyHandler(FileSystemEventHandler):
@@ -19,6 +20,11 @@ class MyHandler(FileSystemEventHandler):
 
 
 def activate_watchdog():
+
+    if args.logfile:
+        log = get_logger(log_to_file=True, log_file=args.logfile)
+    else:
+        log = get_logger()
     # Load rules from file if args.rules is a path
     if isinstance(args.rules, str) and Path(args.rules).is_file():
         with open(args.rules, "r", encoding="utf-8") as f:
@@ -26,7 +32,7 @@ def activate_watchdog():
     else:
         rules = args.rules  # Already a dict
 
-    organizer = FileOrganizer(args.source, rules, history)
+    organizer = FileOrganizer(args.source, rules, history, logger=log)
     path = Path(args.source)
     observer = Observer()
     handler = MyHandler(organizer)
@@ -35,11 +41,11 @@ def activate_watchdog():
     observer.start()
 
     try:
-        print("Watching for changes. Press Ctrl+C to stop.")
+        log.info("Watching for changes. Press Ctrl+C to stop.")
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("Stopping observer...")
+        log.info("Stopping observer...")
     finally:
         observer.stop()
         observer.join()
