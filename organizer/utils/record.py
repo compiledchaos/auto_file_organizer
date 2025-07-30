@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 import os
-from logger_code import get_logger
+from organizer.logger_code import get_logger
 
 
 def record_move(

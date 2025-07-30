@@ -1,5 +1,6 @@
 from organizer.app import run_gui
-from commands import cli, args
+from commands import cli
+from args import args
 import sys
 from file_watcher import activate_watchdog
 from organizer.logger_code import get_logger

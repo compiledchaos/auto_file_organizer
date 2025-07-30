@@ -1,12 +1,10 @@
 from organizer.core import FileOrganizer
-from cli import parse_args
 from organizer.utils.data import history
 import json
 from pathlib import Path
 import sys
 from organizer.logger_code import get_logger
-
-args = parse_args()
+from args import args
 
 if args.logfile:
     log = get_logger(log_to_file=True, log_file=args.logfile)

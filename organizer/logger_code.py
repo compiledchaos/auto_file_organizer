@@ -12,7 +12,7 @@ def get_logger(
     if logger.handlers:
         return logger  # Logger already configured
 
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     # Formatter
     formatter = logging.Formatter(
