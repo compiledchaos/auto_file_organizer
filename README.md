@@ -83,6 +83,7 @@ auto_file_organizer/
 │   ├── __init__.py             # Marks the directory as a Python package
 │   ├── app.py                  # (Optional) Entry point for GUI
 │   ├── core.py                 # Core organizing and undo logic
+│   ├── logger_code.py          # Logic for logger
 │   └── utils/                  # Utility modules for supporting functions
 │       ├── __init__.py         # Marks the utils directory as a package
 │       ├── data.py             # Data handling and serialization helpers
@@ -109,9 +110,6 @@ auto_file_organizer/
 
 * 📦 **Python Package**
   Installable via pip with entry points like `auto-organize` for CLI use.
-
-* 📓 **Logging Support**
-  Enable debug, info, and error logs to console and file, configurable per run.
 
 ---
 
