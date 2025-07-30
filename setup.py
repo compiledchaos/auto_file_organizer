@@ -12,7 +12,7 @@ setup(
     python_requires=">=3.8",
     entry_points={
         "console_scripts": [
-            "auto-organize = commands:main",  # command -> function
+            "auto-organize = organizer.commands:main",
         ],
     },
     include_package_data=True,

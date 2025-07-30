@@ -4,7 +4,7 @@ from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from organizer.logger_code import get_logger
-from args import parse_args  # <- not args!
+from organizer.args import parse_args  # <- not args!
 
 
 def cli():
