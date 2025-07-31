@@ -5,7 +5,6 @@ from watchdog.events import DirCreatedEvent, FileCreatedEvent, FileSystemEventHa
 from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
-from args import args
 from organizer.logger_code import get_logger
 
 
@@ -19,7 +18,7 @@ class MyHandler(FileSystemEventHandler):
         return super().on_created(event)
 
 
-def activate_watchdog():
+def activate_watchdog(args):
 
     if args.logfile:
         log = get_logger(log_to_file=True, log_file=args.logfile)

@@ -1,13 +1,17 @@
 import tkinter as tk
 import json
-from organizer.utils.logger_setup import setup
+from organizer.args import args
+from organizer.logger_code import get_logger
 
 organizer_instance = {"obj": None}
 
+if args.logfile:
+    log = get_logger(log_to_file=True, log_file=args.logfile)
+else:
+    log = get_logger()
 
-def set_folder(txt_box, FileOrganizer, rules, history, args):
-    log = setup(args)
 
+def set_folder(txt_box, FileOrganizer, rules, history):
     folder = txt_box.get("1.0", tk.END).strip()
     if folder:
         try:
@@ -25,9 +29,7 @@ def set_folder(txt_box, FileOrganizer, rules, history, args):
         txt_box.insert(tk.END, "Please Enter Valid Path")
 
 
-def organize_action(txt_box, args):
-    log = setup(args)
-
+def organize_action(txt_box):
     org = organizer_instance["obj"]
     if org:
         try:
@@ -45,9 +47,7 @@ def organize_action(txt_box, args):
         log.warning("Set folder first.")
 
 
-def undo_action(txt_box, args):
-    log = setup(args)
-
+def undo_action(txt_box):
     org = organizer_instance["obj"]
     if org:
         try:
@@ -67,9 +67,7 @@ def undo_action(txt_box, args):
         log.warning("Set folder first.")
 
 
-def reset_action(txt_box, args):
-    log = setup(args)
-
+def reset_action(txt_box):
     org = organizer_instance["obj"]
     if org:
         try:

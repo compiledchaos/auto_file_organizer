@@ -16,8 +16,7 @@ def get_logger(
 
     # Formatter
     formatter = logging.Formatter(
-        "[%(asctime)s] %(levelname)s: %(message)s %(funcName)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        "[%(asctime)s] %(levelname)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
 
     # Console handler
