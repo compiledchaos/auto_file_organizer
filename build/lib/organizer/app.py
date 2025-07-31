@@ -9,12 +9,9 @@ from organizer.utils import (
     undo_action,
     reset_action,
 )
-from organizer.logger_code import get_logger
-
-log = get_logger()
 
 
-def run_gui(args):
+def run_gui():
     root = tk.Tk()
     frame = ttk.Frame(root)
     frame.grid(column=0, row=0, sticky=("W, N ,E, S"))
@@ -22,23 +19,23 @@ def run_gui(args):
 
     txt_box = tk.Text(frame, height=13, width=40, wrap="word")
     txt_box.grid(column=1, row=1)
+
     SetFolder = ttk.Button(
         text="Set Folder",
-        command=lambda: set_folder(txt_box, FileOrganizer, rules, history, args),
+        command=lambda: set_folder(txt_box, FileOrganizer, rules, history),
     )
     SetFolder.grid(column=1, row=2)
 
-    Organize = ttk.Button(
-        text="Organize", command=lambda: organize_action(txt_box, args)
-    )
+    Organize = ttk.Button(text="Organize", command=lambda: organize_action(txt_box))
     Organize.grid(column=2, row=3)
 
-    Undo = ttk.Button(text="Undo", command=lambda: undo_action(txt_box, args))
+    Undo = ttk.Button(text="Undo", command=lambda: undo_action(txt_box))
     Undo.grid(column=2, row=2)
 
     Reset = ttk.Button(
         text="Reset",
-        command=lambda: reset_action(txt_box, args),
+        command=lambda: reset_action(txt_box),
     )
     Reset.grid(column=1, row=3)
+
     frame.mainloop()

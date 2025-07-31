@@ -8,11 +8,11 @@ setup(
     author_email="sachinprathik8@gmail.com",
     url="https://github.com/compiledchaos/auto_file_organizer",
     packages=find_packages(),  # Finds `organizer` and submodules
-    install_requires=["watchdog"],
+    install_requires=["watchdog", "setuptools"],
     python_requires=">=3.8",
     entry_points={
         "console_scripts": [
-            "auto-organize = organizer.commands:main",
+            "auto-organize = organizer.commands:entry",
         ],
     },
     include_package_data=True,
