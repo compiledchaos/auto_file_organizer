@@ -1,4 +1,5 @@
 import argparse
+from organizer.utils.data import rules
 
 
 def parse_args():
@@ -16,7 +17,7 @@ def parse_args():
     parser.add_argument(
         "--rules",
         type=str,
-        default="rules.json",
+        default=rules,
         help="Path to the JSON file containing file organization rules.",
     )
 
