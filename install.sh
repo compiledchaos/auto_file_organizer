@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- CONFIG ---
-TARGET_BRANCH="main"  # Change this to your desired branch
+TARGET_BRANCH="packaging"  # Change this to your desired branch
 EXTRAS="dev"          # Optional: pip install extras like pip install -e .[dev]
 
 # --- STEP 1: Verify git repo ---
