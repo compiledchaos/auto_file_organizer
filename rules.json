@@ -1,0 +1,16 @@
+{
+  ".jpg": "Images",
+  ".pdf": "Pdfs/Epubs",
+  ".png": "Images",
+  ".txt": "Documents",
+  ".zip": "Archives",
+  ".exe": "Application",
+  ".xlsx": "Excel",
+  ".epub": "Pdfs/Epubs",
+  ".csv": "Excel",
+  ".docx": "Documents",
+  ".py": "Python",
+  ".ipynb": "Python",
+  ".jar": "Jar_Files",
+  ".mp4": "Videos"
+}
