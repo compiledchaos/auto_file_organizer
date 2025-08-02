@@ -54,7 +54,7 @@ class FileOrganizer:
                         try:
                             if not self.simulate:
                                 Path(x).rename(dest)
-                            record_move(x, dest, self.simulate, logfile=self.logger)
+                            record_move(x, dest, self.simulate, logger=self.logger)
                             break  # Success, exit retry loop
                         except PermissionError:
                             if attempt < 4:

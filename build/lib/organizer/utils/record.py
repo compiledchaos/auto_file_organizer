@@ -4,7 +4,7 @@ from organizer.logger_code import get_logger
 from organizer.utils.data import UNDO_PATH
 
 
-def record_move(original_path, new_path, simulate=False, logfile=None):
+def record_move(original_path, new_path, simulate=False, logger=None):
     """
     Records a file move operation in the undo history.
 
@@ -12,7 +12,7 @@ def record_move(original_path, new_path, simulate=False, logfile=None):
         original_path: The original path of the file before the move.
         new_path: The new path of the file after the move.
         simulate: If True, the move is simulated and not actually performed.
-        logfile: Path to the log file for logging.
+        logger: Logger object for logging operations.
 
     The function records a file move operation in the undo history. If the undo file
     exists, it loads the existing history data. If the undo file does not exist, it
@@ -20,8 +20,8 @@ def record_move(original_path, new_path, simulate=False, logfile=None):
     history and writes it back to the undo file. If simulate is True, the move is
     simulated and not actually performed.
     """
-    if logfile:
-        log = get_logger(log_to_file=True, log_file=logfile)
+    if logger:
+        log = logger
     else:
         log = get_logger()
 

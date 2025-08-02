@@ -6,6 +6,7 @@ from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from organizer.logger_code import get_logger
+from organizer.utils.data import rules_func
 
 
 class MyHandler(FileSystemEventHandler):
@@ -43,8 +44,10 @@ def activate_watchdog(args):
     if isinstance(args.rules, str) and Path(args.rules).is_file():
         with open(args.rules, "r", encoding="utf-8") as f:
             rules = json.load(f)
-    else:
+    elif args.rules:
         rules = args.rules  # Already a dict
+    else:
+        rules = rules_func()
     history_data = history()
     organizer = FileOrganizer(args.source, rules, history_data, logger=log)
     path = Path(args.source)

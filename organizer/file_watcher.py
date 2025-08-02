@@ -6,16 +6,56 @@ from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from organizer.logger_code import get_logger
+from organizer.utils.data import rules_func
 
 
 class MyHandler(FileSystemEventHandler):
     def __init__(self, organizer):
         super().__init__()
         self.organizer = organizer
+        self.last_organize_time = 0
+        self.organize_cooldown = 2  # Seconds to wait between organizes
 
-    def on_created(self, event: DirCreatedEvent | FileCreatedEvent) -> None:
-        self.organizer.organize()
+    def _should_organize(self):
+        """Check if enough time has passed since last organize to avoid spam"""
+        import time
+
+        current_time = time.time()
+        if current_time - self.last_organize_time >= self.organize_cooldown:
+            self.last_organize_time = current_time
+            return True
+        return False
+
+    def on_created(self, event):
+        """Handle file/directory creation events"""
+        if not event.is_directory and self._should_organize():
+            self.organizer.organize()
         return super().on_created(event)
+
+    def on_moved(self, event):
+        """Handle file/directory move events (common for browser downloads)"""
+        if not event.is_directory and self._should_organize():
+            self.organizer.organize()
+        return super().on_moved(event)
+
+    def on_modified(self, event):
+        """Handle file modification events (for files that are written incrementally)"""
+        if not event.is_directory and self._should_organize():
+            # Only organize if the file is likely finished downloading
+            # (this helps with large files that are written incrementally)
+            import os
+            import time
+
+            try:
+                # Check if file exists and is not being written to
+                if hasattr(event, "src_path") and os.path.exists(event.src_path):
+                    # Simple heuristic: if file size hasn't changed in 1 second, it's probably done
+                    time.sleep(1)
+                    if os.path.exists(event.src_path):
+                        self.organizer.organize()
+            except (OSError, AttributeError):
+                # If we can't check the file, just organize anyway
+                self.organizer.organize()
 
 
 def activate_watchdog(args):
