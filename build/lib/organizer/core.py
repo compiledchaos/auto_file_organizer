@@ -7,6 +7,16 @@ import logging
 class FileOrganizer:
 
     def __init__(self, source_folder, rules, history, simulate=False, logger=None):
+        """
+        Initializes a new instance of the FileOrganizer class.
+
+        Args:
+            source_folder: The source directory to organize.
+            rules: The rules for organizing files.
+            history: The history of file moves.
+            simulate: Whether to simulate the organization process.
+            logger: The logger to use for logging events.
+        """
         self.source = Path(source_folder)
         self.rules = rules
 
@@ -15,6 +25,20 @@ class FileOrganizer:
         self.logger = logger or logging.getLogger(__name__)
 
     def organize(self):
+        """
+        Organizes all files in the source directory based on the rules.
+
+        For each file in the source directory, it checks if the file extension matches
+        one of the rules. If it does, it moves the file to the directory specified by
+        the rule. If the directory does not exist, it is created.
+
+        If the simulate flag is set, the file moves are only simulated and the files
+        are not actually moved.
+
+        If an error occurs during the move (e.g. permission denied), the error is
+        logged and the move is retried up to 5 times. If the move fails after 5
+        retries, the error is logged and the move is skipped.
+        """
         files = [x for x in self.source.iterdir() if x.is_file()]
         if not self.simulate:
             for dir in self.rules.values():
@@ -47,6 +71,15 @@ class FileOrganizer:
                             break
 
     def undo(self):
+        """
+        Reverts the last file move operation recorded in history.
+
+        This function checks the history for the last file move, backs up the
+        original file if it still exists, and then restores the file to its
+        original location. If the history is empty, it logs an informational
+        message. In case of any errors during the undo process, an error message
+        is logged.
+        """
         if not self.history:
             self.logger.info("No history to undo.")
             return
@@ -65,6 +98,13 @@ class FileOrganizer:
             self.logger.error(f"Error during undo: {e}")
 
     def reset(self):
+        """
+        Resets the history of file moves.
+
+        This function resets the history of file moves by removing all entries from
+        the history file. If an error occurs during the reset process, an error
+        message is logged.
+        """
         try:
             reset(logfile=self.logger)
         except Exception as e:

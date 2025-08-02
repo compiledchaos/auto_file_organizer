@@ -1,8 +1,25 @@
 import argparse
-from organizer.utils.data import rules
+from organizer.utils.data import rules_func
 
 
 def parse_args():
+    """
+    Parses command-line arguments for the Auto File Organizer.
+
+    Returns:
+        argparse.Namespace: Parsed arguments including options for source directory,
+        rules file, simulation mode, undo functionality, logging, reset, GUI mode, and watchdog.
+
+    Options:
+        --source: The source directory to organize. Default is the Downloads folder.
+        --rules: Path to the JSON file containing file organization rules.
+        --simulate: Show what would happen without actually moving files.
+        --undo: Undo the last batch of file moves using undo.json.
+        --logfile: Path to log file (enables file logging).
+        --reset: Reset history before organizing new folder.
+        --gui: Switch to GUI.
+        --watchdog: Activates WatchDog.
+    """
     parser = argparse.ArgumentParser(
         description="🗂️ Auto File Organizer — Clean up your messy folders with custom rules!"
     )
@@ -17,7 +34,7 @@ def parse_args():
     parser.add_argument(
         "--rules",
         type=str,
-        default=rules,
+        default=None,
         help="Path to the JSON file containing file organization rules.",
     )
 
@@ -53,6 +70,12 @@ def parse_args():
         "--watchdog",
         action="store_true",
         help="Activates WatchDog",
+    )
+
+    parser.add_argument(
+        "--history",
+        action="store_true",
+        help="Path to history file (enables history logging).",
     )
 
     return parser.parse_args()

@@ -43,9 +43,11 @@ def activate_watchdog(args):
     if isinstance(args.rules, str) and Path(args.rules).is_file():
         with open(args.rules, "r", encoding="utf-8") as f:
             rules = json.load(f)
-    else:
+    elif args.rules:
         rules = args.rules  # Already a dict
-    history_data = history(args)
+    else:
+        rules = rules_func()
+    history_data = history()
     organizer = FileOrganizer(args.source, rules, history_data, logger=log)
     path = Path(args.source)
     observer = Observer()

@@ -4,15 +4,28 @@ from pathlib import Path
 from organizer.core import FileOrganizer
 from organizer.utils.data import history
 from organizer.logger_code import get_logger
-from organizer.utils.data import rules
+from organizer.utils.data import rules_func
 from organizer.file_watcher import activate_watchdog
 from organizer.cli import parse_args
 from organizer.app import run_gui
 
-x = rules
+x = rules_func()
 
 
 def cli(args):
+    """
+    Command Line Interface function for the file organizer.
+
+    Args:
+        args: Parsed command line arguments which include options for
+              source directory, rules file, simulation mode, reset, undo, and logging.
+
+    This function initializes the logger, parses the source and rules,
+    and creates a FileOrganizer instance. It then performs the organization
+    of files based on the specified rules, with options to undo the last
+    operation or reset the history. Errors during processing are logged
+    and the application exits with a non-zero status code on failure.
+    """
 
     log = get_logger(log_to_file=bool(args.logfile), log_file=args.logfile)
 
@@ -21,7 +34,7 @@ def cli(args):
     data = history()
     simulate = args.simulate
     reset = args.reset
-    if args.rules is str:
+    if args.rules is not None:
         try:
             with open(rules_path) as f:
                 rules = json.load(f)
@@ -40,18 +53,37 @@ def cli(args):
     else:
         rules = x
     try:
+        log.info(f"Starting file organization in directory: {source}")
         organizer = FileOrganizer(source, rules, data, simulate, logger=log)
         organizer.organize()
         if args.undo:
             organizer.undo()
         if reset:
             organizer.reset()
+        log.info("File organization completed successfully")
     except Exception as e:
         log.error(f"Error during organization: {e}")
         sys.exit(1)
 
 
 def entry():
+    """
+    Entry point for the file organizer application.
+
+    This function parses command line arguments and handles different modes of operation:
+    - GUI mode: Launches the graphical user interface for file organization.
+    - Watchdog mode: Activates the file watcher to monitor and organize files in real-time.
+    - CLI mode: Performs file organization based on command line arguments.
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        SystemExit: If an error occurs during argument parsing or execution.
+    """
     args = parse_args()
     log = get_logger(log_to_file=bool(args.logfile), log_file=args.logfile)
 

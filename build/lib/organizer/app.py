@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from organizer.core import FileOrganizer
 from organizer.utils import (
-    rules,
+    rules_func,
     history,
     set_folder,
     organize_action,
@@ -15,16 +15,35 @@ log = get_logger()
 
 
 def run_gui(args):
+    """
+    Runs the graphical user interface for file organization.
+
+    Creates a window with four buttons and a text box:
+    - Set Folder: Set the folder to be organized.
+    - Organize: Organize the files in the folder according to the rules.
+    - Undo: Undo the last organization action.
+    - Reset: Reset the history of organization actions.
+
+    The text box is used to display messages about the actions taken.
+
+    Args:
+        args: Parsed command line arguments.
+
+    Returns:
+        None
+    """
     root = tk.Tk()
     frame = ttk.Frame(root)
     frame.grid(column=0, row=0, sticky=("W, N ,E, S"))
     root.title("Auto_File_Organizer")
 
+    history_data = history(args.history)
+    rules = rules_func()
     txt_box = tk.Text(frame, height=13, width=40, wrap="word")
     txt_box.grid(column=1, row=1)
     SetFolder = ttk.Button(
         text="Set Folder",
-        command=lambda: set_folder(txt_box, FileOrganizer, rules, history, args),
+        command=lambda: set_folder(txt_box, FileOrganizer, rules, history_data, args),
     )
     SetFolder.grid(column=1, row=2)
 
